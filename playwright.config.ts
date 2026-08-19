@@ -44,7 +44,7 @@ export default defineConfig({
     trace: 'on-first-retry', //Graba video durante toda la prueba, pero solo guarda el archivo si el test falla
     video: 'retain-on-failure',
     screenshot: 'only-on-failure', // Capturas automáticas cuando falle un test
-    //launchOptions: {slowMo: 1000}, Para Slow Motion
+    //launchOptions: {slowMo: 1000}, // Para Slow Motion
   },
 
 
