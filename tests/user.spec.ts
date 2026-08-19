@@ -31,6 +31,7 @@ test('Login y captura de usuarios den Orange HRM', async ({ page }) => {
         }
     }
 
+    console.log('✅ Usuarios capturados: ', usernames.length)
     console.log(usernames)
 
 });
