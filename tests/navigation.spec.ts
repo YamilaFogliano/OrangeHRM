@@ -14,15 +14,15 @@ test('Validación de menús laterales', async ({ page }) => {
 
     console.log('✅ Ingreso exitoso');
 
-    const leftMenuITems = page.getByLabel('Sidepanel').getByRole('listitem')
-    const currentMenuItemsCount = await leftMenuITems.count()
+    const leftMenuItems = page.getByLabel('Sidepanel').getByRole('listitem')
+    const currentMenuItemsCount = await leftMenuItems.count()
     console.log('Current menu items count', currentMenuItemsCount)
 
     const currentMenuItems: string[] = []
 
     for (let i = 0; i < currentMenuItemsCount; i++) {
 
-        const menuText = await leftMenuITems.nth(i).innerText()
+        const menuText = await leftMenuItems.nth(i).innerText()
         currentMenuItems.push(menuText)
     }
 
@@ -47,4 +47,31 @@ test('Validación de menús laterales', async ({ page }) => {
     ];
 
     expect(currentMenuItems).toEqual(expectedMenuItems)
+});
+
+test('Recorrido por items laterales y acceso a cada uno de ellos', async ({ page }) => {
+    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+
+    await page.getByRole('textbox', { name: 'Username' }).fill('Admin');
+    await page.getByRole('textbox', { name: 'Password' }).fill('admin123');
+    await page.getByRole('button', { name: 'Login' }).click();
+
+    await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
+
+    console.log('✅ Ingreso exitoso');
+
+    const leftMenuItems = page.getByLabel('Sidepanel').getByRole('listitem')
+    const currentMenuItemsCount = await leftMenuItems.count()
+
+    for (let i = 0; i < currentMenuItemsCount; i++) {
+        const menuItem = leftMenuItems.nth(i)
+        const menuText = await menuItem.innerText()
+
+        console.log('Current menu item', menuText)
+
+        if (menuText !== 'Maintenance') {
+            await menuItem.click()
+        }
+    }
+
 });
