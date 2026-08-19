@@ -26,6 +26,8 @@ test('Validación de menús laterales', async ({ page }) => {
         currentMenuItems.push(menuText)
     }
 
+    await expect(page.getByText('Admin')).toBeVisible();
+
     console.log(currentMenuItems)
 
     const expectedMenuItems = [
