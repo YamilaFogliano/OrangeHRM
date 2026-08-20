@@ -43,8 +43,11 @@ test('Seleccionar usuario para editar', async ({ page }) => {
     console.log('✅ Buscando usuarios');
     await page.getByRole('link', { name: 'Admin' }).click();
 
-    const userRow = page.locator('.oxd-table-card').first();
-    await expect(userRow).toBeVisible();
+    const userRows = page.locator('.oxd-table-card');
+    await expect(userRows.first()).toBeVisible();
+
+    const randomIndex = Math.floor(Math.random() * await userRows.count());
+    const userRow = userRows.nth(randomIndex);
 
     const userForEdition = (await userRow.locator('.oxd-table-cell')
         .nth(1)
@@ -62,6 +65,6 @@ test('Seleccionar usuario para editar', async ({ page }) => {
 
     await expect(usernameInput).toHaveValue(userForEdition);
 
-    console.log('✅ Usuario seleccionado: ', userForEdition)
+    console.log('✅ Usuario seleccionado: ', userForEdition);
 
 });
