@@ -1,14 +1,14 @@
 import { test, expect } from '@playwright/test';
+import { LoginPage } from '../pages/LoginPage';
 
-test('Login y captura de usuarios den Orange HRM', async ({ page }) => {
+test('Login y captura de usuarios en Orange HRM', async ({ page }) => {
 
     console.log('✅ Ingresando credenciales');
-    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
-    await page.getByRole('textbox', { name: 'Username' }).fill('Admin');
-    await page.getByRole('textbox', { name: 'Password' }).fill('admin123');
-    await page.getByRole('button', { name: 'Login' }).click();
-    await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible();
+    const loginPage = new LoginPage(page);
+    await loginPage.doLogin('Admin', 'admin123');
     console.log('✅ Ingreso exitoso');
+
+    await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
 
     console.log('✅ Recolectando usuarios');
     await page.getByRole('link', { name: 'Admin' }).click();
@@ -16,35 +16,30 @@ test('Login y captura de usuarios den Orange HRM', async ({ page }) => {
     await page.getByRole('navigation', { name: 'Topbar menu' }).getByText('User Management').click();
     await page.getByRole('menuitem', { name: 'Users' }).click();
 
-    const rows = page.getByRole('table').getByRole('row')
-    const usernames: string[] = []
+    const firstRow = page.locator('.oxd-table-card').first();
+    await expect(firstRow).toBeVisible();
 
-    const rowCount = await rows.count()
+    const userCells = page.locator('.oxd-table-card .oxd-table-cell:nth-child(2)');
+    const usernames = (await userCells.allTextContents())
+        .map(name => name.trim())
+        .filter(Boolean);
 
-    for (let i = 1; i < rowCount; i++) {
+    console.log('✅ Usuarios capturados: ', usernames.length);
+    console.log(usernames);
 
-        const cell = rows.nth(i).getByRole('cell').nth(1)
-        const username = await cell.textContent()
-
-        if (username) {
-            usernames.push(username)
-        }
-    }
-
-    console.log('✅ Usuarios capturados: ', usernames.length)
-    console.log(usernames)
+    expect(usernames.length).toBeGreaterThan(0);
 
 });
 
-test('Seleccionar usuario para editar usuario', async ({ page }) => {
+test('Seleccionar usuario para editar', async ({ page }) => {
 
     const userForEdition = 'Ramya';
 
     console.log('✅ Ingresando credenciales');
-    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
-    await page.getByPlaceholder('Username').fill('Admin');
-    await page.getByPlaceholder('Password').fill('admin123');
-    await page.getByRole('button', { name: 'Login' }).click();
+    const loginPage = new LoginPage(page)
+    await loginPage.doLogin('Admin', 'admin123')
+    console.log('✅ Ingreso exitoso');
+
     await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible();
 
     console.log('✅ Recolectando usuarios');
@@ -58,6 +53,7 @@ test('Seleccionar usuario para editar usuario', async ({ page }) => {
     await userRow
         .locator('button')
         .filter({ has: page.locator('i.bi-pencil-fill') })
+        .first()
         .click();
 
     const usernameInput = page
