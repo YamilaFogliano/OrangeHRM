@@ -35,3 +35,36 @@ test('Login y captura de usuarios den Orange HRM', async ({ page }) => {
     console.log(usernames)
 
 });
+
+test('Seleccionar usuario para editar usuario', async ({ page }) => {
+
+    const userForEdition = 'Ramya';
+
+    console.log('✅ Ingresando credenciales');
+    await page.goto('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login');
+    await page.getByPlaceholder('Username').fill('Admin');
+    await page.getByPlaceholder('Password').fill('admin123');
+    await page.getByRole('button', { name: 'Login' }).click();
+    await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible();
+
+    console.log('✅ Recolectando usuarios');
+    await page.getByRole('link', { name: 'Admin' }).click();
+
+    const userRow = page
+        .getByRole('table')
+        .getByRole('row')
+        .filter({ hasText: userForEdition });
+
+    await userRow
+        .locator('button')
+        .filter({ has: page.locator('i.bi-pencil-fill') })
+        .click();
+
+    const usernameInput = page
+        .locator('.oxd-input-group')
+        .filter({ hasText: 'Username' })
+        .locator('input');
+
+    await expect(usernameInput).toHaveValue(userForEdition);
+
+});
