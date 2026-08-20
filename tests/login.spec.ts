@@ -8,7 +8,7 @@ test('Login de Orange HRM', async ({ page }) => {
     console.log('✅ Ingresando credenciales');
 
     const loginPage = new LoginPage(page)
-    await loginPage.doLogin('Admin', 'admin123')
+    await loginPage.loginAsAdmin()
 
     await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
     console.log('✅ Ingreso exitoso');

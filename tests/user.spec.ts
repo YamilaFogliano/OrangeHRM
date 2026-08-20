@@ -1,11 +1,12 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
+import { Environment } from '../utils/Environment';
 
 test('Login y captura de usuarios en Orange HRM', async ({ page }) => {
 
     console.log('✅ Ingresando credenciales');
     const loginPage = new LoginPage(page);
-    await loginPage.doLogin('Admin', 'admin123');
+    await loginPage.doLogin(Environment.ADMIN_USERNAME, Environment.ADMIN_PASSWORD);
     console.log('✅ Ingreso exitoso');
 
     await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
@@ -35,7 +36,7 @@ test('Seleccionar usuario para editar', async ({ page }) => {
 
     console.log('✅ Ingresando credenciales');
     const loginPage = new LoginPage(page);
-    await loginPage.doLogin('Admin', 'admin123');
+    await loginPage.doLogin(Environment.ADMIN_USERNAME, Environment.ADMIN_PASSWORD);
     console.log('✅ Ingreso exitoso');
 
     await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible();

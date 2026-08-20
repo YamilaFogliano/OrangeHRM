@@ -146,3 +146,4 @@ node_modules/
 playwright-report/
 allure-results/
 test-results/
+.env
