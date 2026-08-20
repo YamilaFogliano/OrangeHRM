@@ -33,27 +33,26 @@ test('Login y captura de usuarios en Orange HRM', async ({ page }) => {
 
 test('Seleccionar usuario para editar', async ({ page }) => {
 
-    const userForEdition = 'Ramya';
-
     console.log('✅ Ingresando credenciales');
-    const loginPage = new LoginPage(page)
-    await loginPage.doLogin('Admin', 'admin123')
+    const loginPage = new LoginPage(page);
+    await loginPage.doLogin('Admin', 'admin123');
     console.log('✅ Ingreso exitoso');
 
     await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible();
 
-    console.log('✅ Recolectando usuarios');
+    console.log('✅ Buscando usuarios');
     await page.getByRole('link', { name: 'Admin' }).click();
 
-    const userRow = page
-        .getByRole('table')
-        .getByRole('row')
-        .filter({ hasText: userForEdition });
+    const userRow = page.locator('.oxd-table-card').first();
+    await expect(userRow).toBeVisible();
+
+    const userForEdition = (await userRow.locator('.oxd-table-cell')
+        .nth(1)
+        .textContent())?.trim() || '';
 
     await userRow
         .locator('button')
         .filter({ has: page.locator('i.bi-pencil-fill') })
-        .first()
         .click();
 
     const usernameInput = page
@@ -62,5 +61,7 @@ test('Seleccionar usuario para editar', async ({ page }) => {
         .locator('input');
 
     await expect(usernameInput).toHaveValue(userForEdition);
+
+    console.log('✅ Usuario seleccionado: ', userForEdition)
 
 });
