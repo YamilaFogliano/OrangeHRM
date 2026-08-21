@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { Environment } from '../utils/Environment';
 
-test('Login y captura de usuarios en Orange HRM', async ({ page }) => {
+test('1. Login y captura de usuarios en Orange HRM', async ({ page }) => {
 
     console.log('✅ Ingresando credenciales');
     const loginPage = new LoginPage(page);
@@ -32,7 +32,7 @@ test('Login y captura de usuarios en Orange HRM', async ({ page }) => {
 
 });
 
-test('Seleccionar usuario para editar', async ({ page }) => {
+test('2. Seleccionar usuario para editar', async ({ page }) => {
 
     console.log('✅ Ingresando credenciales');
     const loginPage = new LoginPage(page);
