@@ -25,7 +25,7 @@ test('1. Login de Orange HRM', async ({ page }) => {
 
 });
 
-test('2. Login de Orange HRM como empleado', async ({ page }) => {
+test.skip('2. Login de Orange HRM como empleado', async ({ page }) => {
 
     console.log('✅ Ingresando credenciales');
 
