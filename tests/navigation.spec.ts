@@ -1,6 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { Environment } from '../utils/Environment';
+import { TopBarMenu } from '../components/topbar-menu/TopBarMenu';
+import { SideMenuOption, SidePanel } from '../components/SidePanel';
 
 const EXPECTED_MENU_ITEMS = [
     'Admin',
@@ -78,6 +80,49 @@ test.describe('Navegación en OrangeHRM', () => {
 
             await expect(page).toHaveURL(new RegExp(expectedPage.url));
         }
+    });
+
+    test('5. Validacion de elementos totales TopBar Menu', async ({ page }) => {
+        test.setTimeout(60000)
+
+        const sidePanel = new SidePanel(page)
+        await sidePanel.clickOnOption(SideMenuOption.ADMIN)
+
+        await expect(page.getByRole('navigation', { name: 'Topbar Menu' })).toBeVisible();
+
+        const topBarMenu = new TopBarMenu(page)
+
+        await topBarMenu.userManagement.clickOnUsers()
+
+        await topBarMenu.job.clickOnJobTitles()
+        await topBarMenu.job.clickOnPayGrades()
+        await topBarMenu.job.clickOnEmploymentStatus()
+        await topBarMenu.job.clickOnJobCategories()
+        await topBarMenu.job.clickOnWorkShifts()
+
+        await topBarMenu.organization.clickOnGeneralInformation()
+        await topBarMenu.organization.clickOnLocations()
+        await topBarMenu.organization.clickOnStructure()
+
+        await topBarMenu.qualifications.clickOnSkills()
+        await topBarMenu.qualifications.clickOnEducation()
+        await topBarMenu.qualifications.clickOnLicenses()
+        await topBarMenu.qualifications.clickOnLanguages()
+        await topBarMenu.qualifications.clickOnMemberships()
+
+        await topBarMenu.nationalities.clickOnNations()
+
+        await topBarMenu.corporateBranding.clickOnCorpBrand()
+
+        await topBarMenu.configuration.clickOnEmailConfig()
+        await topBarMenu.configuration.clickOnEmailSubs()
+        await topBarMenu.configuration.clickOnLocalization()
+        await topBarMenu.configuration.clickOnLanguagePackage()
+        await topBarMenu.configuration.clickOnModules()
+        await topBarMenu.configuration.clickOnSocialMediaAuth()
+        await topBarMenu.configuration.clickOnRegisterOAuthClients()
+        await topBarMenu.configuration.clickOnLDAPConfig()
+
     });
 
 });
