@@ -22,6 +22,8 @@ jobs:
       env:
           ADMIN_USERNAME: ${{ secrets.ADMIN_USERNAME }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          EMP_USERNAME: ${{ secrets.EMP_USERNAME }}
+          EMP_PASSWORD: ${{ secrets.EMP_PASSWORD }}
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
