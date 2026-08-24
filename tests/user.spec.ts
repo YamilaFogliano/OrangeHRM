@@ -6,8 +6,7 @@ import { TopBarMenu } from '../components/topbar-menu/TopBarMenu';
 test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
 
     test.beforeEach(async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        await loginPage.loginAsAdmin();
+        await page.goto("/web/index.php/dashboard/index")
     });
 
     test('1. Login y captura de usuarios', async ({ page }) => {
