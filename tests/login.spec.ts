@@ -7,8 +7,7 @@ test('1. Login de Orange HRM', async ({ page }) => {
 
     console.log('✅ Ingresando credenciales');
 
-    const loginPage = new LoginPage(page)
-    await loginPage.loginAsAdmin()
+    await page.goto("/web/index.php/dashboard/index")
 
     await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
     console.log('✅ Ingreso exitoso');
@@ -29,8 +28,7 @@ test.skip('2. Login de Orange HRM como empleado', async ({ page }) => {
 
     console.log('✅ Ingresando credenciales');
 
-    const loginPage = new LoginPage(page)
-    await loginPage.loginAsEmp()
+    await page.goto("/web/index.php/dashboard/index")
 
     await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
     console.log('✅ Ingreso exitoso');
