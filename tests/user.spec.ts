@@ -236,9 +236,10 @@ test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
         await page.getByRole('button', { name: 'Search' }).click();
         await responsePromise;
 
-        await expect(roleCells.first()).toBeVisible();
+        await expect(roleCells.first()).toHaveText('Admin');
 
-        await expect(roleCells).toHaveText(await roleCells.evaluateAll(cells => cells.map(() => /^Admin$/)));
+        const nonAdminCells = roleCells.filter({ hasText: 'ESS' });
+        await expect(nonAdminCells).toHaveCount(0);
     });
 
     test('6. Filtrado por usuario: Enabled', async ({ page }) => {
@@ -258,8 +259,9 @@ test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
         await page.getByRole('button', { name: 'Search' }).click();
         await responsePromise;
 
-        await expect(statusCells.first()).toBeVisible();
+        await expect(statusCells.first()).toHaveText('Enabled');
 
-        await expect(statusCells).toHaveText(await statusCells.evaluateAll(cells => cells.map(() => /^Enabled$/)));
+        const disabledCells = statusCells.filter({ hasText: 'Disabled' });
+        await expect(disabledCells).toHaveCount(0);
     });
 });
