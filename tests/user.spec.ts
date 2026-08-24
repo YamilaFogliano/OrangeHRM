@@ -1,6 +1,7 @@
 import { test, expect } from '@playwright/test';
 import { LoginPage } from '../pages/LoginPage';
 import { Environment } from '../utils/Environment';
+import { SideMenuOption, SidePanel } from '../components/SidePanel';
 
 test('1. Login y captura de usuarios en Orange HRM', async ({ page }) => {
 
@@ -67,5 +68,55 @@ test('2. Seleccionar usuario para editar', async ({ page }) => {
     await expect(usernameInput).toHaveValue(userForEdition);
 
     console.log('✅ Usuario seleccionado: ', userForEdition);
+
+});
+
+test('3. Inspección sobre menú desplegable: User Role', async ({ page }) => {
+
+    const expectedRoleOptions = ['-- Select --', 'Admin', 'ESS']
+
+    const loginPage = new LoginPage(page)
+    await loginPage.loginAsAdmin()
+
+    const sidePanel = new SidePanel(page)
+    await sidePanel.clickOnOption(SideMenuOption.ADMIN)
+
+    await page.locator("//label[contains(.,'User Role')]/parent::div/following-sibling::div")
+        .click()
+    const currentUserRoleOptions = await page
+        .getByRole('listbox')
+        .getByRole('option')
+        .allInnerTexts()
+
+    console.log(currentUserRoleOptions)
+
+    expect(currentUserRoleOptions,
+        'Las opciones desplegadas no concuerdan con las esperadas.')
+        .toEqual(expectedRoleOptions)
+
+});
+
+test('4. Inspección sobre menú desplegable: Status', async ({ page }) => {
+
+    const expectedRoleOptions = ['-- Select --', 'Enabled', 'Disabled']
+
+    const loginPage = new LoginPage(page)
+    await loginPage.loginAsAdmin()
+
+    const sidePanel = new SidePanel(page)
+    await sidePanel.clickOnOption(SideMenuOption.ADMIN)
+
+    await page.locator("//label[contains(.,'Status')]/parent::div/following-sibling::div")
+        .click()
+    const currentUserRoleOptions = await page
+        .getByRole('listbox')
+        .getByRole('option')
+        .allInnerTexts()
+
+    console.log(currentUserRoleOptions)
+
+    expect(currentUserRoleOptions,
+        'Las opciones desplegadas no concuerdan con las esperadas.')
+        .toEqual(expectedRoleOptions)
 
 });
