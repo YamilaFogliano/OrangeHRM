@@ -19,7 +19,9 @@ test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
         const userCells = page.locator('.oxd-table-card .oxd-table-cell:nth-child(2)');
         await expect(userCells.first()).toBeVisible();
 
-        const usernames = (await userCells.allTextContents()).map(name => name.trim()).filter(Boolean);
+        const usernames = (await userCells.allTextContents())
+            .map(name => name.trim())
+            .filter(Boolean);
 
         console.log('✅ Usuarios capturados: ', usernames.length);
         expect(usernames.length).toBeGreaterThan(0);
@@ -33,9 +35,13 @@ test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
         await expect(userRows.first()).toBeVisible();
 
         const firstRow = userRows.first();
-        const usernameToEdit = (await firstRow.locator('.oxd-table-cell').nth(1).textContent())?.trim() || '';
+        const usernameToEdit = (await firstRow.locator('.oxd-table-cell')
+            .nth(1)
+            .textContent())?.trim() || '';
 
-        await firstRow.locator('button').filter({ has: page.locator('i.bi-pencil-fill') }).click();
+        await firstRow.locator('button')
+            .filter({ has: page.locator('i.bi-pencil-fill') })
+            .click();
 
         const usernameInput = page.locator('.oxd-input-group', { hasText: 'Username' }).locator('input');
         await expect(usernameInput).toHaveValue(usernameToEdit);
@@ -106,4 +112,29 @@ test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
         const disabledCells = statusCells.filter({ hasText: 'Disabled' });
         await expect(disabledCells).toHaveCount(0);
     });
+
+    test('7. Captura de montos totales en tabla @slow', async ({ page }) => {
+        test.slow();
+        await page.goto('/web/index.php/claim/viewAssignClaim');
+
+        const table = page.getByRole('table');
+        await expect(table).toBeVisible();
+
+        const amountCells = table.getByRole('rowgroup').nth(1).locator('div[role="cell"]:nth-child(8), td:nth-child(8)');
+
+        await expect(amountCells.first()).toBeVisible();
+
+        const rawTexts = await amountCells.allTextContents();
+
+        const amounts = rawTexts
+            .map(text => parseFloat(text.replace(/,/g, '').trim()))
+            .filter(num => !isNaN(num));
+
+        const total = amounts.reduce((acc, curr) => acc + curr, 0);
+
+        console.log('Cantidades:', amounts);
+        console.log('El total es:', total);
+    });
 });
+
+

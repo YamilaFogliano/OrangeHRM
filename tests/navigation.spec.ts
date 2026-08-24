@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
 import { Environment } from '../utils/Environment';
 import { TopBarMenu } from '../components/topbar-menu/TopBarMenu';
 import { SideMenuOption, SidePanel } from '../components/SidePanel';
@@ -34,9 +33,9 @@ test.describe('Navegación en OrangeHRM', () => {
         await expect(leftMenuItems).toHaveText(EXPECTED_MENU_ITEMS);
     });
 
-    test('2. Recorrido por items laterales y acceso a cada uno de ellos', async ({ page }) => {
+    test('2. Recorrido por items laterales y acceso a cada uno de ellos @slow', async ({ page }) => {
+        test.slow();
 
-        test.setTimeout(60000);
         const leftMenuItems = page.getByLabel('Sidepanel').getByRole('listitem');
 
         for (const menuItem of await leftMenuItems.all()) {
@@ -76,14 +75,17 @@ test.describe('Navegación en OrangeHRM', () => {
 
         for (const expectedPage of expectedPages) {
             await topbarMenu.getByText('Qualifications').click();
-            await page.getByRole('menu').locator('li').filter({ hasText: expectedPage.menu }).click();
+            await page.getByRole('menu')
+                .locator('li')
+                .filter({ hasText: expectedPage.menu })
+                .click();
 
             await expect(page).toHaveURL(new RegExp(expectedPage.url));
         }
     });
 
-    test('5. Validacion de elementos totales TopBar Menu', async ({ page }) => {
-        test.setTimeout(60000)
+    test('5. Validacion de elementos totales TopBar Menu @slow', async ({ page }) => {
+        test.slow();
 
         const sidePanel = new SidePanel(page)
         await sidePanel.clickOnOption(SideMenuOption.ADMIN)

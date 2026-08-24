@@ -5,7 +5,7 @@ import { LoginPage } from '../pages/LoginPage';
 const AUTH_STATE_PATH = path.resolve(process.cwd(), '.auth', 'admin.json');
 
 setup('Autenticación como Admin', async ({ page }) => {
-    console.log('✅ Iniciando flujo de autenticación para Admin...');
+    console.log('✅ Iniciando flujo de autenticación...');
 
     const loginPage = new LoginPage(page);
     await loginPage.loginAsAdmin();
