@@ -13,6 +13,8 @@ setup('Autenticación como Admin', async ({ page }) => {
     await page.waitForURL('**/dashboard/index');
     await expect(page.getByRole('link', { name: 'Admin' })).toBeVisible();
 
+    await page.waitForLoadState('networkidle');
+
     await page.context().storageState({ path: AUTH_STATE_PATH });
 
     console.log('✅ Estado de autenticación guardado correctamente.');

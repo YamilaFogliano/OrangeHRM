@@ -1,5 +1,4 @@
 import { test, expect } from '@playwright/test';
-import { LoginPage } from '../pages/LoginPage';
 import { SideMenuOption, SidePanel } from '../components/SidePanel';
 
 
@@ -9,6 +8,7 @@ test('1. Login de Orange HRM', async ({ page }) => {
 
     await page.goto("/web/index.php/dashboard/index")
 
+    await page.waitForURL('**/dashboard/index');
     await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
     console.log('✅ Ingreso exitoso');
 
@@ -30,6 +30,7 @@ test.skip('2. Login de Orange HRM como empleado', async ({ page }) => {
 
     await page.goto("/web/index.php/dashboard/index")
 
+    await page.waitForURL('**/dashboard/index');
     await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
     console.log('✅ Ingreso exitoso');
 

@@ -22,8 +22,8 @@ const EXPECTED_MENU_ITEMS = [
 test.describe('Navegación en OrangeHRM', () => {
 
     test.beforeEach(async ({ page }) => {
-        const loginPage = new LoginPage(page);
-        await loginPage.loginAsAdmin();
+
+        await page.goto("/web/index.php/dashboard/index")
 
         await expect(page.getByRole('link', { name: 'Dashboard' })).toBeVisible();
     });
