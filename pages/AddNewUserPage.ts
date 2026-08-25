@@ -1,4 +1,5 @@
 import { Page, expect, Locator } from "@playwright/test";
+import { UserModel } from "../models/UserModel";
 
 export class AddNewUserPage {
 
@@ -19,7 +20,7 @@ export class AddNewUserPage {
         await this.addButton.click();
     }
 
-    async selectUserRole(userRole: 'Admin' | 'ESS') {
+    async selectUserRole(userRole: string) {
         await expect(this.page.getByText('Add User')).toBeVisible();
         await this.page.locator('.oxd-input-group', { hasText: 'User Role' })
             .locator('.oxd-select-text-input')
@@ -28,7 +29,7 @@ export class AddNewUserPage {
         await this.page.getByRole('option', { name: userRole, exact: true }).click();
     }
 
-    async selectStatus(status: 'Enabled' | 'Disabled') {
+    async selectStatus(status: string) {
         await this.page.locator('.oxd-input-group', { hasText: 'Status' })
             .locator('.oxd-select-text-input')
             .click();
@@ -74,5 +75,16 @@ export class AddNewUserPage {
     async checkUserWasAddedMessage() {
         await expect(this.toastMessage).toBeVisible();
         await expect(this.toastMessage).toHaveText('Successfully Saved');
+    }
+
+    async addNewUser(user: UserModel) {
+        await this.clickOnAdd()
+        await this.selectUserRole(user.role)
+        await this.selectStatus(user.status)
+        await this.selectEmployeeName(user.employee)
+        await this.enterUsername(user.username)
+        await this.enterPassword(user.password)
+        await this.enterConfirmPassword(user.confirmPassword)
+        await this.clickOnSave()
     }
 }

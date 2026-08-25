@@ -4,6 +4,7 @@ import { SideMenuOption, SidePanel } from '../components/SidePanel';
 import { TopBarMenu } from '../components/topbar-menu/TopBarMenu';
 import { Navigate } from '../pages/Navigate';
 import { AddNewUserPage } from '../pages/AddNewUserPage';
+import { UserModel } from '../models/UserModel';
 
 test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
 
@@ -151,14 +152,16 @@ test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
         await sidePanel.clickOnOption(SideMenuOption.ADMIN);
 
         const addNewUserPage = new AddNewUserPage(page);
-        await addNewUserPage.clickOnAdd()
-        await addNewUserPage.selectUserRole('ESS')
-        await addNewUserPage.selectStatus('Enabled')
-        await addNewUserPage.selectEmployeeName('a')
-        await addNewUserPage.enterUsername(randomUserName)
-        await addNewUserPage.enterPassword(password)
-        await addNewUserPage.enterConfirmPassword(password)
-        await addNewUserPage.clickOnSave()
+        const userToAdd: UserModel = {
+            username: randomUserName,
+            employee: 'a',
+            role: 'ESS',
+            status: 'Enabled',
+            password: password,
+            confirmPassword: password
+        }
+
+        await addNewUserPage.addNewUser(userToAdd)
         await addNewUserPage.checkUserWasAddedMessage()
 
     });
