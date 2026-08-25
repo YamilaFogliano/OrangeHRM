@@ -135,6 +135,64 @@ test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
         console.log('Cantidades:', amounts);
         console.log('El total es:', total);
     });
+
+    test('8. Creación de un nuevo usuario @slow', async ({ page }) => {
+        test.slow()
+
+        const randomUserName = 'YamilaOrange' + crypto.randomUUID().slice(0, 8)
+        const password = 'PassOrange2#' + crypto.randomUUID().slice(0, 4)
+
+        const sidePanel = new SidePanel(page);
+        await sidePanel.clickOnOption(SideMenuOption.ADMIN);
+
+        await expect(page.getByText('Add')).toBeVisible()
+        await page.getByText('Add').click()
+
+        //User Role
+        await expect(page.getByText('Add User')).toBeVisible()
+        await page.locator('.oxd-input-group', { hasText: 'User Role' })
+            .locator('.oxd-select-text-input')
+            .click();
+        await page.getByRole('option', { name: 'ESS' }).click();
+
+        //Status
+        await page.locator('.oxd-input-group', { hasText: 'Status' })
+            .locator('.oxd-select-text-input')
+            .click();
+        await page.getByRole('option', { name: 'Enabled' }).click();
+
+        //Employee Name
+        const employeeInput = page.getByRole('textbox', { name: 'Type for hints...' });
+        await employeeInput.fill('a');
+        await page.waitForResponse(resp => resp.url().includes('/api/v2/pim/employees') && resp.status() === 200);
+
+        const firstOption = page.locator('div[role="option"]').first();
+        await expect(firstOption).toBeVisible();
+        await firstOption.click();
+
+        //Username
+        await page.locator('div.oxd-grid-item--gutters')
+            .filter({ has: page.getByText('Username', { exact: true }) })
+            .getByRole('textbox')
+            .fill(randomUserName)
+
+        //Password
+        await page.locator('div.oxd-grid-item--gutters')
+            .filter({ has: page.getByText('Password', { exact: true }) })
+            .getByRole('textbox')
+            .fill(password)
+
+        //Confirm Password
+        await page.locator('div.oxd-grid-item--gutters')
+            .filter({ has: page.getByText('Confirm Password', { exact: true }) })
+            .getByRole('textbox')
+            .fill(password)
+
+        await page.getByRole('button', { name: 'save' }).click()
+
+        await expect(page.locator('p.oxd-text--toast-message')).toHaveText('Successfully Saved');
+
+    });
 });
 
 
