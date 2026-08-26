@@ -147,10 +147,7 @@ test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
         const password = 'PassOrange2#' + crypto.randomUUID().slice(0, 4)
 
         const navigate = new Navigate(page)
-        await navigate.toDashboard()
-
-        const sidePanel = new SidePanel(page);
-        await sidePanel.clickOnOption(SideMenuOption.ADMIN);
+        await navigate.toUsers()
 
         const userManagementPage = new UserManagementPage(page);
         const userToAdd: UserModel = {
@@ -170,11 +167,8 @@ test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
     test('9. Búsqueda dinámica y actualización de Password a usuario Admin @slow', async ({ page }) => {
         test.slow();
 
-        const navigate = new Navigate(page);
-        await navigate.toDashboard();
-
-        const sidePanel = new SidePanel(page);
-        await sidePanel.clickOnOption(SideMenuOption.ADMIN);
+        const navigate = new Navigate(page)
+        await navigate.toUsers()
 
         const userManagementPage = new UserManagementPage(page);
 
@@ -203,11 +197,8 @@ test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
     test('10. Búsqueda dinámica y actualización de Username a YamilaOrange @slow', async ({ page }) => {
         test.slow();
 
-        const navigate = new Navigate(page);
-        await navigate.toDashboard();
-
-        const sidePanel = new SidePanel(page);
-        await sidePanel.clickOnOption(SideMenuOption.ADMIN);
+        const navigate = new Navigate(page)
+        await navigate.toUsers()
 
         const userManagementPage = new UserManagementPage(page);
         await userManagementPage.filterByRole('Admin');
@@ -217,6 +208,26 @@ test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
         await userManagementPage.enterUsername(newUsername);
         await userManagementPage.clickOnSave();
         await userManagementPage.checkUserWasUpdatedMessage();
+    });
+
+    test('11. Seleccionar usuario para eliminar (Opcion: Sí, eliminar)', async ({ page }) => {
+        const navigate = new Navigate(page)
+        await navigate.toUsers()
+
+        const userManagementPage = new UserManagementPage(page);
+        await userManagementPage.deleteUserFromTableByIndex(1);
+        await userManagementPage.clickOnDelete();
+        await userManagementPage.checkUserWasDeletedMessage();
+    });
+
+    test('12. Seleccionar usuario para eliminar (Opcion: No, cancelar)', async ({ page }) => {
+        const navigate = new Navigate(page)
+        await navigate.toUsers()
+
+        const userManagementPage = new UserManagementPage(page);
+        await userManagementPage.deleteUserFromTableByIndex(1);
+        await userManagementPage.clickOnCancel();
+        await expect(page.getByRole('button', { name: 'No, Cancel' })).toBeHidden();
     });
 });
 

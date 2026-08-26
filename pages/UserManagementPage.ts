@@ -7,12 +7,16 @@ export class UserManagementPage {
     private readonly saveButton: Locator;
     private readonly toastMessage: Locator;
     private readonly employeeInput: Locator;
+    private readonly deleteButton: Locator;
+    private readonly cancelButton: Locator;
 
     constructor(private readonly page: Page) {
         this.addButton = page.getByRole('button', { name: 'Add' });
         this.saveButton = page.getByRole('button', { name: 'Save' });
         this.toastMessage = page.locator('p.oxd-text--toast-message');
         this.employeeInput = page.getByRole('textbox', { name: 'Type for hints...' });
+        this.deleteButton = page.getByRole('button', { name: 'Yes, Delete' });
+        this.cancelButton = page.getByRole('button', { name: 'No, Cancel' });
     }
 
     //Filtra la tabla por rol de usuario
@@ -51,6 +55,32 @@ export class UserManagementPage {
         await expect(usernameInput).toHaveValue(currentUsername);
 
         return currentUsername;
+    }
+
+    // Selecciona el botón de basura de la 2da fila para no borrar al Admin)
+    async deleteUserFromTableByIndex(index: number = 1): Promise<string> {
+        const userRows = this.page.locator('.oxd-table-card');
+        await expect(userRows.nth(index)).toBeVisible();
+
+        const targetRow = userRows.nth(index);
+        const username = (await targetRow.locator('.oxd-table-cell').nth(1).textContent())?.trim() || '';
+
+        await targetRow.locator('button')
+            .filter({ has: this.page.locator('i.bi-trash') })
+            .click();
+
+        return username;
+    }
+
+    //Eliminacion y cancelacion
+    async clickOnDelete() {
+        await expect(this.deleteButton).toBeVisible();
+        await this.deleteButton.click();
+    }
+
+    async clickOnCancel() {
+        await expect(this.cancelButton).toBeVisible();
+        await this.cancelButton.click();
     }
 
     //Metodos de los formularios
@@ -128,7 +158,11 @@ export class UserManagementPage {
         await expect(this.toastMessage).toBeVisible();
         await expect(this.toastMessage).toHaveText('Successfully Updated');
     }
-
+    async checkUserWasDeletedMessage() {
+        await expect(this.toastMessage).toBeVisible();
+        await expect(this.toastMessage).toHaveText('Successfully Deleted');
+    }
+    
     async addNewUser(user: UserModel) {
         await this.clickOnAdd()
         await this.selectUserRole(user.role)
