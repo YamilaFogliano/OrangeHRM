@@ -1,7 +1,7 @@
 import { Page, expect, Locator } from "@playwright/test";
 import { UserModel } from "../models/UserModel";
 
-export class AddNewUserPage {
+export class UserManagementPage {
 
     private readonly addButton: Locator;
     private readonly saveButton: Locator;
@@ -15,6 +15,45 @@ export class AddNewUserPage {
         this.employeeInput = page.getByRole('textbox', { name: 'Type for hints...' });
     }
 
+    //Filtra la tabla por rol de usuario
+    async filterByRole(role: string) {
+        const userRoleDropdown = this.page.locator('.oxd-input-group', { hasText: 'User Role' }).getByText('-- Select --');
+        await userRoleDropdown.click();
+        await this.page.getByRole('option', { name: role, exact: true }).click();
+
+        const responsePromise = this.page.waitForResponse(
+            resp => resp.url().includes('/api/v2/admin/users') && resp.status() === 200
+        );
+        await this.page.getByRole('button', { name: 'Search' }).click();
+        await responsePromise;
+    }
+
+    //Busqueda y navegacion en la tabla
+    //Edita el primer usuario disponible en la tabla y devuelve su nombre de usuario
+    async editFirstUserFromTable(): Promise<string> {
+        const userRows = this.page.locator('.oxd-table-card');
+        await expect(userRows.first()).toBeVisible();
+
+        const firstRow = userRows.first();
+        const currentUsername = (await firstRow.locator('.oxd-table-cell').nth(1).textContent())?.trim() || '';
+
+        const userDetailsPromise = this.page.waitForResponse(
+            resp => resp.url().includes('/api/v2/admin/users/') && resp.status() === 200
+        );
+
+        await firstRow.locator('button')
+            .filter({ has: this.page.locator('i.bi-pencil-fill') })
+            .click();
+
+        await userDetailsPromise;
+
+        const usernameInput = this.page.locator('.oxd-input-group', { hasText: 'Username' }).locator('input');
+        await expect(usernameInput).toHaveValue(currentUsername);
+
+        return currentUsername;
+    }
+
+    //Metodos de los formularios
     async clickOnAdd() {
         await expect(this.addButton).toBeVisible();
         await this.addButton.click();
@@ -50,9 +89,13 @@ export class AddNewUserPage {
     }
 
     async enterUsername(username: string) {
-        await this.page.locator('.oxd-input-group', { hasText: 'Username' })
-            .getByRole('textbox')
-            .fill(username);
+        const usernameInput = this.page
+            .locator('.oxd-input-group', { hasText: 'Username' })
+            .locator('input');
+
+        await usernameInput.click();
+        await usernameInput.clear();
+        await usernameInput.fill(username);
     }
 
     async clickChangePasswordCheckbox() {
