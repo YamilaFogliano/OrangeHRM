@@ -142,7 +142,7 @@ test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
     test('8. Creación de un nuevo usuario @slow', async ({ page }) => {
         test.slow()
 
-        const randomUserName = 'YamilaOrange' + crypto.randomUUID().slice(0, 8)
+        const randomUserName = 'YamilaOrange' + crypto.randomUUID().slice(0, 3)
         const password = 'PassOrange2#' + crypto.randomUUID().slice(0, 4)
 
         const navigate = new Navigate(page)
@@ -165,6 +165,114 @@ test.describe('Pruebas del Módulo Admin - OrangeHRM', () => {
         await addNewUserPage.checkUserWasAddedMessage()
 
     });
+
+    test('9. Búsqueda dinámica y actualización de Password a usuario Admin @slow', async ({ page }) => {
+        test.slow();
+
+        const navigate = new Navigate(page);
+        await navigate.toDashboard();
+
+        const sidePanel = new SidePanel(page);
+        await sidePanel.clickOnOption(SideMenuOption.ADMIN);
+
+        // BLOQUE BASADO EN TEST 5: Filtrar por rol 'Admin'
+        const userRoleDropdown = page.locator('.oxd-input-group', { hasText: 'User Role' }).getByText('-- Select --');
+        await userRoleDropdown.click();
+        await page.getByRole('option', { name: 'Admin', exact: true }).click();
+
+        const responsePromise = page.waitForResponse(resp => resp.url().includes('/api/v2/admin/users') && resp.status() === 200);
+        await page.getByRole('button', { name: 'Search' }).click();
+        await responsePromise;
+
+        // BLOQUE BASADO EN TEST 2: Seleccionar usuario para editar
+        const userRows = page.locator('.oxd-table-card');
+        await expect(userRows.first()).toBeVisible();
+
+        const firstRow = userRows.first();
+        const currentUsername = (await firstRow.locator('.oxd-table-cell').nth(1).textContent())?.trim() || '';
+
+        await firstRow.locator('button')
+            .filter({ has: page.locator('i.bi-pencil-fill') })
+            .click();
+
+        const usernameInput = page.locator('.oxd-input-group', { hasText: 'Username' }).locator('input');
+        await expect(usernameInput).toHaveValue(currentUsername);
+
+        // BLOQUE BASADO EN TEST 8: Estructura UserModel (Editando a rol ESS)
+        const newPassword = 'NewPassOrange2#' + crypto.randomUUID().slice(0, 4);
+
+        const userToUpdate: UserModel = {
+            username: currentUsername,
+            employee: 'a',
+            role: 'ESS',
+            status: 'Enabled',
+            password: newPassword,
+            confirmPassword: newPassword
+        };
+
+        const addNewUserPage = new AddNewUserPage(page);
+
+        await addNewUserPage.selectUserRole(userToUpdate.role);
+
+        await addNewUserPage.clickChangePasswordCheckbox();
+        await addNewUserPage.enterPassword(userToUpdate.password);
+        await addNewUserPage.enterConfirmPassword(userToUpdate.confirmPassword);
+
+        await addNewUserPage.clickOnSave();
+        await addNewUserPage.checkUserWasUpdatedMessage();
+    });
+
+    test('10. Búsqueda dinámica y actualización de Username a YamilaOrange @slow', async ({ page }) => {
+        test.slow();
+
+        const navigate = new Navigate(page);
+        await navigate.toDashboard();
+
+        const sidePanel = new SidePanel(page);
+        await sidePanel.clickOnOption(SideMenuOption.ADMIN);
+
+        // BLOQUE BASADO EN TEST 5: Filtrar por rol 'Admin'
+        const userRoleDropdown = page.locator('.oxd-input-group', { hasText: 'User Role' }).getByText('-- Select --');
+        await userRoleDropdown.click();
+        await page.getByRole('option', { name: 'Admin', exact: true }).click();
+
+        const responsePromise = page.waitForResponse(resp => resp.url().includes('/api/v2/admin/users') && resp.status() === 200);
+        await page.getByRole('button', { name: 'Search' }).click();
+        await responsePromise;
+
+        // BLOQUE BASADO EN TEST 2: Seleccionar usuario para editar
+        const userRows = page.locator('.oxd-table-card');
+        await expect(userRows.first()).toBeVisible();
+
+        const firstRow = userRows.first();
+        const currentUsername = (await firstRow.locator('.oxd-table-cell').nth(1).textContent())?.trim() || '';
+
+        await firstRow.locator('button')
+            .filter({ has: page.locator('i.bi-pencil-fill') })
+            .click();
+
+        const usernameInput = page.locator('.oxd-input-group', { hasText: 'Username' }).locator('input');
+        await expect(usernameInput).toHaveValue(currentUsername);
+
+        // BLOQUE BASADO EN TEST 8: Definir el nuevo Username de usuario random a 'YamilaOrange'
+        const newUsername = 'YamilaOrange' + crypto.randomUUID().slice(0, 4);
+
+        const userToUpdate: UserModel = {
+            username: newUsername,
+            employee: '',
+            role: 'Admin',
+            status: 'Enabled',
+            password: '',
+            confirmPassword: ''
+        };
+
+        const addNewUserPage = new AddNewUserPage(page);
+        await usernameInput.clear();
+        await addNewUserPage.enterUsername(userToUpdate.username);
+        await addNewUserPage.clickOnSave();
+        await addNewUserPage.checkUserWasUpdatedMessage();
+    });
 });
+
 
 

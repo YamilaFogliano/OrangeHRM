@@ -21,7 +21,7 @@ export class AddNewUserPage {
     }
 
     async selectUserRole(userRole: string) {
-        await expect(this.page.getByText('Add User')).toBeVisible();
+        await expect(this.page.getByText(/(Add|Edit) User/)).toBeVisible();
         await this.page.locator('.oxd-input-group', { hasText: 'User Role' })
             .locator('.oxd-select-text-input')
             .click();
@@ -55,6 +55,10 @@ export class AddNewUserPage {
             .fill(username);
     }
 
+    async clickChangePasswordCheckbox() {
+        await this.page.locator('.oxd-checkbox-wrapper').getByText('Yes').click();
+    }
+
     async enterPassword(password: string) {
         await this.page.locator('.oxd-input-group', { hasText: 'Password' })
             .getByRole('textbox')
@@ -75,6 +79,11 @@ export class AddNewUserPage {
     async checkUserWasAddedMessage() {
         await expect(this.toastMessage).toBeVisible();
         await expect(this.toastMessage).toHaveText('Successfully Saved');
+    }
+
+    async checkUserWasUpdatedMessage() {
+        await expect(this.toastMessage).toBeVisible();
+        await expect(this.toastMessage).toHaveText('Successfully Updated');
     }
 
     async addNewUser(user: UserModel) {
