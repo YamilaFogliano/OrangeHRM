@@ -16,8 +16,8 @@ test.describe.serial('API Suite: OrangeHRM Users Management (CRUD)', () => {
         const body = await response.json();
         const usersList = body.data ?? [];
 
-        console.log(`\n✔ [GET] Total de usuarios recuperados: ${usersList.length}`);
-        console.log('----------------------------------------------------');
+        console.log(`\n✅ [GET] Total de usuarios recuperados: ${usersList.length}`);
+        console.log('===========================================================');
 
         // Iteracion sobre todos los usuarios devueltos
         usersList.forEach((user: any, index: number) => {
@@ -26,7 +26,7 @@ test.describe.serial('API Suite: OrangeHRM Users Management (CRUD)', () => {
             console.log(`   [#${index + 1}] ID: ${user.id} | Username: "${username}" | Rol: ${role}`);
         });
 
-        console.log('----------------------------------------------------');
+        console.log('===========================================================');
     });
 
     //Obtener la lista y elegir un usuario en particular por posición --> 
@@ -38,16 +38,16 @@ test.describe.serial('API Suite: OrangeHRM Users Management (CRUD)', () => {
         const body = await response.json();
         const usersList = body.data ?? [];
 
-        console.log(`\n🔍 [GET] Usuarios recuperados en total: ${usersList.length}`);
+        console.log(`\n✅ [GET] Usuarios recuperados en total: ${usersList.length}`);
 
-        const targetPosition = 200;
+        const targetPosition = 4;
         const targetIndex = targetPosition - 1;
 
         if (usersList[targetIndex]) {
             const selectedUser = usersList[targetIndex];
             const username = selectedUser.userName ?? selectedUser.username ?? 'N/A';
 
-            console.log(`\n✔ Datos capturados del usuario N° ${targetPosition}:`);
+            console.log(`\n🔎 Datos capturados del usuario N° ${targetPosition}:`);
             console.log(`🆔 ID: ${selectedUser.id}`);
             console.log(`👤 Username: ${username}`);
             console.log(`💼 Rol: ${selectedUser.userRole?.name ?? 'N/A'}`);
@@ -82,7 +82,7 @@ test.describe.serial('API Suite: OrangeHRM Users Management (CRUD)', () => {
 
         const createdUsername = body.data?.userName ?? body.data?.username ?? testUserData.username;
 
-        console.log(`\n ✔  [POST] Usuario creado con éxito:`);
+        console.log(`\n ✅ [POST] Usuario creado con éxito:`);
         console.log(`🆔 ID generado: ${createdUserId}`);
         console.log(`👤 Username: ${createdUsername}`);
         console.log(`💼 EmpNumber asociado: ${validEmpNumber}`);
@@ -114,12 +114,12 @@ test.describe.serial('API Suite: OrangeHRM Users Management (CRUD)', () => {
         const body = await response.json();
         const updatedUsername = body.data?.userName ?? body.data?.username ?? updatedPayload.username;
 
-        console.log(`\n✔[PUT] Usuario ID #${createdUserId} actualizado correctamente:`);
+        console.log(`\n✅ [PUT] Usuario ID #${createdUserId} actualizado correctamente:`);
         console.log(`👤 Username: ${updatedUsername}`);
-        console.log(`🟢 Status (Habilitado): ${updatedPayload.status}`);
+        console.log(`🟢 Status (Enabled | Disabled): ${updatedPayload.status}`);
     });
 
-    test.skip('4. DELETE - Eliminar el usuario creado', async ({ request }) => {
+    test('4. DELETE - Eliminar el usuario creado', async ({ request }) => {
         expect(createdUserId, 'Se requiere un ID de usuario para eliminar').toBeDefined();
 
         const apiClient = await UsersApiClient.fromSavedAuthState(request);
@@ -127,8 +127,8 @@ test.describe.serial('API Suite: OrangeHRM Users Management (CRUD)', () => {
 
         expect(response.status()).toBe(200);
 
-        console.log(`\n✔ [DELETE] Eliminación del usuario completada:`);
-        console.log(`❌ ID eliminado: ${createdUserId}`);
+        console.log(`\n✅ [DELETE] Eliminación del usuario completada:`);
+        console.log(`🗑 ID eliminado: ${createdUserId}`);
         console.log(`🟢 Status HTTP: ${response.status()}`);
     });
 });
