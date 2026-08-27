@@ -11,8 +11,7 @@ export abstract class BaseApiClient {
         this.cookieHeader = cookieHeader;
     }
 
-    //Carga la cookie 'orangehrm' almacenada tras el proceso de login/setup.
-
+    //Carga la cookie 'orangehrm' almacenada tras el proceso de login/setup --> 
     protected static async loadAuthenticationCookie(): Promise<string> {
         const authFilePath = path.resolve(process.cwd(), '.auth', 'admin.json');
         const authState = JSON.parse(await readFile(authFilePath, 'utf-8')) as {
@@ -33,7 +32,7 @@ export abstract class BaseApiClient {
         };
     }
 
-    // Métodos CRUD base
+    // Métodos CRUD (Create, Read, Update, Delete) base -->
     protected async get(endpoint: string) {
         return this.request.get(endpoint, { headers: this.getHeaders() });
     }
