@@ -148,3 +148,4 @@ allure-results/
 test-results/
 .env
 GithubConfigYamlParam.txt
+API-Use.txt

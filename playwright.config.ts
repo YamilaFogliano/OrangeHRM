@@ -66,6 +66,7 @@ export default defineConfig({
         storageState: '.auth/admin.json',
       },
       dependencies: ['setup'],
+      testIgnore: '**/*.api.spec.ts',
     },
     {
       name: 'firefox',
@@ -74,8 +75,21 @@ export default defineConfig({
         storageState: '.auth/admin.json',
       },
       dependencies: ['setup'],
+      testIgnore: '**/*.api.spec.ts',
     },
 
+    {
+      name: 'api',
+      testMatch: '**/*.api.spec.ts',
+      use: {
+        video: 'off',
+        screenshot: 'off',
+        extraHTTPHeaders: {
+          'Accept': 'application/json',
+        },
+      },
+      dependencies: ['setup'],
+    },
 
     /*     {
           name: 'webkit',
