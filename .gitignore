@@ -147,3 +147,4 @@ playwright-report/
 allure-results/
 test-results/
 .env
+GithubConfigYamlParam.txt
