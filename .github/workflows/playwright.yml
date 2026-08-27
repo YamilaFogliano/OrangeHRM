@@ -4,6 +4,14 @@ on:
     branches: [ main, master ]
   pull_request:
     branches: [ main, master ]
+    
+  workflow_dispatch:
+    inputs:
+      grep: 
+        description: "Campo opcional para filtrar los tests de playwright"
+        required: false
+        default: ''
+        type: string
 jobs:
   test:
     timeout-minutes: 60
