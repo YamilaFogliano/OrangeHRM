@@ -127,4 +127,22 @@ test.describe('Navegación en OrangeHRM', () => {
 
     });
 
+    test('6. Publicar un mensaje en sección BUZZ', async ({ page }) => {
+
+        const sidePanel = new SidePanel(page);
+        await sidePanel.clickOnOption(SideMenuOption.BUZZ);
+
+        const formattedDate = new Date().toLocaleString('es-ES');
+        const postText = `Hola, soy Yamila - ${formattedDate}`;
+
+        const textarea = page.getByPlaceholder("What's on your mind?");
+        await textarea.fill(postText);
+        await expect(textarea).toHaveValue(postText);
+
+        await page.getByRole('button', { name: 'Post', exact: true }).click();
+
+        await sidePanel.clickOnOption(SideMenuOption.BUZZ);
+        await expect(page.getByText(postText)).toBeVisible({ timeout: 10000 });
+    });
+
 });
