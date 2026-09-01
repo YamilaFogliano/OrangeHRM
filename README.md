@@ -25,7 +25,7 @@ Suite de automatización que valida flujos críticos de usuario e interacciones 
 
 ## 🏗️ Estructura del Proyecto
 
-```text
+text
 ├── components/          # Componentes de UI reutilizables
 ├── models/              # Tipos e interfaces de datos (TypeScript)
 ├── pages/               # Page Object Models (UI)
