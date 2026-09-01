@@ -25,14 +25,14 @@ Suite de automatización que valida flujos críticos de usuario e interacciones 
 
 ## 🏗️ Estructura del Proyecto
 
-text
+```text
 ├── components/          # Componentes de UI reutilizables
 ├── models/              # Tipos e interfaces de datos (TypeScript)
 ├── pages/               # Page Object Models (UI)
 ├── src/api/             # Clientes HTTP para pruebas de API
 ├── tests/               # Suites de prueba (Auth, UI CRUD, API CRUD)
 └── utils/              # Configuración y variables de entorno
-
+```
 ---
 
 ## 🧪 Cobertura de Pruebas
