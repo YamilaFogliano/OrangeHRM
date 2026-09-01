@@ -23,18 +23,6 @@ Suite de automatización que valida flujos críticos de usuario e interacciones 
 
 ---
 
-## 🏗️ Estructura del Proyecto
-
-```text
-├── components/          # Componentes de UI reutilizables
-├── models/              # Tipos e interfaces de datos (TypeScript)
-├── pages/               # Page Object Models (UI)
-├── src/api/             # Clientes HTTP para pruebas de API
-├── tests/               # Suites de prueba (Auth, UI CRUD, API CRUD)
-└── utils/              # Configuración y variables de entorno
-```
----
-
 ## 🧪 Cobertura de Pruebas
 
 ### 🌐 UI Testing (End-to-End)
@@ -48,3 +36,16 @@ Suite de automatización que valida flujos críticos de usuario e interacciones 
 * **POST:** Creación de un usuario utilizando el ID de un empleado disponible capturado automáticamente.
 * **PUT:** Actualización de estado (`Enabled`/`Disabled`), contraseñas y datos del usuario.
 * **DELETE:** Eliminación directa del registro creado garantizando la limpieza del entorno.
+
+---
+
+## 🏗️ Estructura del Proyecto
+
+```text
+├── components/          # Componentes de UI reutilizables
+├── models/              # Tipos e interfaces de datos (TypeScript)
+├── pages/               # Page Object Models (UI)
+├── src/api/             # Clientes HTTP para pruebas de API
+├── tests/               # Suites de prueba (Auth, UI CRUD, API CRUD)
+└── utils/              # Configuración y variables de entorno
+```
