@@ -1,71 +1,50 @@
-OrangeHRM es un software de licencia abierta GNU enfocado en recursos humanos. Se caracteriza por ser integral y flexible ayudando a empresas de todos los tamaños a gestionar a su personal, optimizar los procesos de RRHH e impulsar el crecimiento. Desde la gestión de empleados hasta la selección e incorporación, pasando por la gestión del rendimiento y la gestión de permisos. 
-
-
 🚀 OrangeHRM Test Automation Framework (UI & API)
 
-Framework de automatización e integración continua (End-to-End y API) sobre la plataforma OrangeHRM Open Source, construido con Playwright, TypeScript y Page Object Model (POM).
+Framework híbrido de automatización de pruebas (E2E y API REST) sobre la plataforma de RRHH OrangeHRM Open Source, desarrollado con Playwright, TypeScript y el patrón Page Object Model (POM).
 
-📌 Resumen del Proyecto
-Este proyecto demuestra la implementación de un suite de pruebas automatizadas para validar flujos de trabajo críticos en OrangeHRM, combinando validaciones de interfaz de usuario (UI) e interacciones directas con la API REST interna (API Testing).
+📌 Resumen Técnico
 
-✨ Aspectos Técnicos Destacados
-    Patrón de Diseño: Page Object Model (POM) con división clara de páginas (pages), componentes de UI reutilizables (components) e interfaces de API (api).
+  Suite de automatización que valida flujos críticos de usuario e interacciones directas con la API interna de OrangeHRM.
 
-    Soporte Híbrido UI + API: Cobertura de flujos E2E dinámicos y validaciones directas de endpoints mediante llamadas HTTP con APIRequestContext.
+      Patrones & Arquitectura: Page Object Model (POM), arquitectura basada en componentes y cliente API modular.
 
-    Optimización de Autenticación: Manejo de sesiones persistentes con auth.setup.ts para evitar logins redundantes.
+      Autenticación Eficiente: Sesiones persistentes (auth.setup.ts) para optimizar tiempos de ejecución.
 
-    Manejo Dinámico de Datos: Uso de UUIDs (crypto.randomUUID()) y modelos de datos fuertemente tipados (UserModel, UserPayload) para evitar colisiones de datos en ejecuciones consecutivas.
+      Gestión Dinámica de Datos: Uso de UUIDs y tipos estrictos de TypeScript para garantizar datos aislados en cada prueba.
 
-    Control Asíncrono Avanzado: Sincronización explícita esperando respuestas de red (waitForResponse) ante filtros dinámicos y peticiones XHR.
+      Sincronización: Manejo asíncrono avanzado con waitForResponse para validar peticiones XHR en segundo plano.
 
-🛠️ Tech Stack & Herramientas
+🛠️ Tech Stack
+
     Lenguaje: TypeScript
 
-    Framework E2E & API: Playwright Test
+    Herramienta: Playwright Test (UI & API)
 
-    Patrones: Page Object Model (POM), Component-Based Architecture, API Client Pattern
+    Configuración: Variables de entorno seguras (Environment.ts)
 
-    Gestión de Entorno: Variables de entorno seguras (Environment.ts)
+🏗️ Estructura del Proyecto
 
-🏗️ Arquitectura del Proyecto
+  ├── components/          # Componentes de UI reutilizables
+  ├── models/              # Tipos e interfaces de datos (TypeScript)
+  ├── pages/               # Page Object Models (UI)
+  ├── src/api/             # Clientes HTTP para pruebas de API
+  ├── tests/               # Suites de prueba (Auth, UI CRUD, API CRUD)
+  └── utils/              # Configuración y variables de entorno
 
-├── components/          # Componentes reusables (SidePanel, TopBarMenu, etc.)
-├── models/              # Interfaces y tipos de TypeScript (UserModel, UserPayload)
-├── pages/               # Page Object Models (LoginPage, UserManagementPage, Navigate)
-├── src/api/             # Clientes HTTP encapsulados (UsersApiClient)
-├── tests/               # Suites de pruebas automatizadas
-│   ├── auth.setup.ts    # Configuración de autenticación global
-│   ├── login.spec.ts    # Pruebas de acceso y navegación básica
-│   ├── navigation.spec.ts # Búsquedas, recorridos dinámicos y módulo Maintenance
-│   ├── user.spec.ts     # Flujos E2E de gestión de usuarios (CRUD UI)
-│   └── users.api.spec.ts# Pruebas de API REST (CRUD completo)
-└── utils/              # Variables de entorno y utilidades generales
+🧪 Cobertura de Pruebas:
 
-🧪 Cobertura de Pruebas
-🌐 Interfaz de Usuario (UI Testing)
+  🌐 UI Testing (End-to-End)
 
-    Autenticación y Accesos: Acceso guiado por roles, login de empleados y control de menú lateral con buscador dinámico.
+      Acceso y Navegación: Login por roles, menú lateral dinámico y módulo Maintenance con re-autenticación.
 
-    Navegación e Integridad de Menús: Recorrido exhaustivo de las subsecciones del menú principal y barra superior (Qualifications, Job, Organization, Configuration, Corporate Branding).
+      Gestión de Usuarios (CRUD): Creación, edición, filtrado y borrado dinámico de usuarios.
 
-    Módulo Maintenance: Verificación de seguridad mediante re-autenticación por contraseña (Administrator Access) para ingresar a áreas protegidas.
+      Mapeo de Datos: Lectura de tablas en módulo Claim y cálculo de totales monetarios en tiempo real.
 
-    Gestión de Usuarios (CRUD Completo en UI):
+      Módulo Buzz: Publicación y validación de entradas sociales en vivo.
 
-        Creación dinámica de usuarios con generación de contraseñas/usernames únicos.
+  🔌 API Testing (REST)
 
-        Modificación de roles (Admin / ESS), contraseñas y nombres de usuario.
-
-        Filtrado reactivo de datos en tabla con validación en segundo plano.
-
-        Borrado de registros y confirmación en modales interactivos.
-
-    Mapeo y Cálculo de Datos: Lectura dinámica de tablas en el módulo Claim, extrayendo y parseando valores monetarios para calcular totales acumulados en tiempo real.
-
-    Interacción Social (Buzz Module): Publicación fluida de entradas con marcas de tiempo en vivo y aserciones de visibilidad.
-
-🔌 API REST (API Testing)
     Ciclo de Vida Completo (CRUD en @users.api.spec.ts):
 
         GET: Recuperación de la lista completa de usuarios e inspección por índice/posición.
