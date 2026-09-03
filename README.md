@@ -4,48 +4,75 @@ Framework híbrido de automatización de pruebas (**E2E y API REST**) sobre la p
 
 ---
 
-## 📌 Resumen Técnico
+## 📌 Sobre OrangeHRM
 
-Suite de automatización que valida flujos críticos de usuario e interacciones directas con la API interna de OrangeHRM.
+**OrangeHRM Open Source** es una plataforma integral de gestión de recursos humanos (HRMS) utilizada mundialmente para administrar empleados, solicitudes, permisos y reclutamiento. Este framework de automatización está diseñado para validar tanto la experiencia del usuario en la interfaz gráfica (UI) como la integridad de las comunicaciones en segundo plano mediante su API REST.
 
-* **Patrones & Arquitectura:** Page Object Model (POM), arquitectura basada en componentes y cliente API modular.
-* **Autenticación Eficiente:** Sesiones persistentes (`auth.setup.ts`) para optimizar tiempos de ejecución.
-* **Gestión Dinámica de Datos:** Uso de UUIDs y tipos estrictos de TypeScript para garantizar datos aislados en cada prueba.
-* **Sincronización:** Manejo asíncrono avanzado con `waitForResponse` para validar peticiones XHR en segundo plano.
+### Características Principales:
+* **Gestión de Entidad Empleado/Usuario:** Administración completa (CRUD) de credenciales y roles del sistema.
+* **Módulos Integrados:** Automatización sobre flujos de *Admin*, *PIM*, *Maintenance*, *Claim* y el feed social *Buzz*.
+* **Arquitectura Híbrida (UI + API):** Validación paralela mediante interfaz web e interacción directa con endpoints HTTP para máxima velocidad y fiabilidad en la preparación de datos.
+* **Seguridad y Accesos por Rol:** Verificación de restricciones de acceso y re-autenticación en áreas sensibles.
 
 ---
 
-## 🛠️ Tech Stack
+## 🛠️ Tech Stack & Herramientas
 
 * **Lenguaje:** TypeScript
-* **Herramienta:** Playwright Test (UI & API)
-* **Configuración:** Variables de entorno seguras (`Environment.ts`)
+* **Herramienta (UI & API):** Playwright Test
+* **Patrón de Diseño:** Page Object Model (POM) & Component-Based Architecture
+* **Reportes:** Allure Report & Playwright HTML Report
+* **Gestión de Entorno:** `.env` (`dotenv`)
+
+---
+
+## 📌 Resumen Técnico & Buenas Prácticas
+
+* **Page Object Model (POM) Modular:** Organización desacoplada mediante clases de página (`pages/`), componentes reutilizables (`components/`) y clientes HTTP dedicados (`src/api/`).
+* **Autenticación Eficiente:** Uso de estados de sesión almacenados (`auth.setup.ts`) para evitar logueos innecesarios en cada prueba y acelerar la suite.
+* **Gestión Dinámica de Datos:** Generación de identificadores únicos (UUIDs) y tipado estricto con interfaces de TypeScript (`models/`) para garantizar el aislamiento de datos en pruebas concurrentes.
+* **Sincronización Asíncrona Avanzada:** Intercepción y espera explícita de respuestas XHR con `waitForResponse` para certificar la consistencia del backend antes de realizar aserciones en la UI.
+* **Pruebas de API REST Purificadas:** Cliente de API extensible (`BaseApiClient.ts`) para consumir endpoints de forma limpia con soporte para token de autorización Bearer.
 
 ---
 
 ## 🧪 Cobertura de Pruebas
 
 ### 🌐 UI Testing (End-to-End)
-* **Acceso y Navegación:** Login por roles, menú lateral dinámico y módulo *Maintenance* con re-autenticación.
-* **Gestión de Usuarios (CRUD):** Creación, edición, filtrado y borrado dinámico de usuarios.
-* **Mapeo de Datos:** Lectura de tablas en módulo *Claim* y cálculo de totales monetarios en tiempo real.
+* **Acceso y Navegación (`login.spec.ts`, `navigation.spec.ts`):** Autenticación por roles, validación de menú lateral dinámico y módulo *Maintenance* con re-autenticación.
+* **Gestión de Usuarios - CRUD (`user.spec.ts`):** Creación, edición, filtrado y eliminación de usuarios con aserciones en tablas.
+* **Mapeo de Datos:** Lectura analítica de registros en el módulo *Claim* y cálculo de montos en tiempo real.
 * **Módulo Buzz:** Publicación y validación de entradas sociales en vivo.
 
-### 🔌 API Testing (REST)
-* **GET:** Recuperación de la lista completa de usuarios e inspección por índice/posición.
-* **POST:** Creación de un usuario utilizando el ID de un empleado disponible capturado automáticamente.
-* **PUT:** Actualización de estado (`Enabled`/`Disabled`), contraseñas y datos del usuario.
-* **DELETE:** Eliminación directa del registro creado garantizando la limpieza del entorno.
+### 🔌 API Testing - REST (`users.api.spec.ts`)
+* **GET:** Recuperación del listado global de usuarios e inspección detallada por índice/posición.
+* **POST:** Creación automatizada de nuevos usuarios capturando previamente el ID de un empleado disponible.
+* **PUT:** Modificación de estados de cuenta (`Enabled`/`Disabled`), credenciales y parámetros de usuario.
+* **DELETE:** Eliminación directa del registro creado por API para garantizar un entorno limpio (Teardown).
 
 ---
 
 ## 🏗️ Estructura del Proyecto
 
 ```text
-├── components/          # Componentes de UI reutilizables
-├── models/              # Tipos e interfaces de datos (TypeScript)
-├── pages/               # Page Object Models (UI)
-├── src/api/             # Clientes HTTP para pruebas de API
-├── tests/               # Suites de prueba (Auth, UI CRUD, API CRUD)
-└── utils/              # Configuración y variables de entorno
-```
+OrangeHRM/
+├── .auth/                  # Sesiones de autenticación guardadas
+├── .github/                # Workflows de CI/CD (GitHub Actions)
+├── allure-results/         # Reportes detallados con Allure
+├── components/             # Componentes UI reutilizables (tablas, modales)
+├── models/                 # Interfaces y tipos de TypeScript
+├── pages/                  # Page Object Models (UI)
+├── src/
+│   └── api/                # Clientes HTTP para automatización de API
+│       ├── BaseApiClient.ts
+│       └── UsersApiClient.ts
+├── tests/                  # Suites de prueba E2E y API
+│   ├── auth.setup.ts
+│   ├── login.spec.ts
+│   ├── navigation.spec.ts
+│   ├── user.spec.ts
+│   └── users.api.spec.ts
+├── utils/                  # Configuración de variables de entorno
+├── .env                    # Variables de entorno locales
+├── playwright.config.ts    # Configuración global de Playwright
+└── package.json
